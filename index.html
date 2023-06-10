@@ -1,0 +1,140 @@
+
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="ad.size" content="width=300,height=250">
+  <link rel="stylesheet" type="text/css" href="banstyle.min.css">
+</head>
+
+<body>
+  <div id="adArea" class="rct">
+    <div id="mainScreen" class="absfull">
+      <!-- STEP 1 -->
+      <img src="Logo.png" alt="" class="logo">
+      <div class="section step1 active amimScreen">
+
+
+        <img src="slogan.png" alt="" class="slogan">
+        <div class="bowlBlock">
+          <img src="product.png" alt="" class="bowl">
+        </div>
+          <div id="scratch-container">
+          <img src="scratchFront.png" alt="" class="scratchFont hiddenImg">
+          <img src="scratchBack.png" alt="" class="scratchBack hiddenImg">
+          </div>
+          <div class="rainblock rainblock1">
+
+          </div>
+        <div id="generBlock">
+        </div>
+
+      </div>
+      <div class="cursorBlock">
+        <img class="content-image" src="wipe.png" />
+      </div>
+    </div>
+  </div>
+  <script src="scratchcard.min.js"></script>
+  <script type="text/javascript">
+    function ctaFunction() {
+      window.open("http://ms.purplepatch.online/adgallery");
+    }
+
+    function _dsptr(e) {
+      var track = new Image();
+      track.src = "{EVENT_URL}" + e;
+    };
+
+    var ft = true;
+    function dragft() {
+      if (ft) {
+        ft = false;
+        _dsptr("started");
+      }
+    }
+
+    var ft2 = true;
+    function dragft2() {
+     if (ft2) {
+       ft2 = false;
+       _dsptr("finished");
+     }
+    }
+
+    /* script */
+    const hideCursorBlock = function() {
+      setTimeout(function() {
+        dragft();
+        document.querySelector('.cursorBlock').classList.add('hidden');
+      }, 500);
+    };
+
+    mainArea = document.querySelector("#mainScreen");
+    mainArea.addEventListener('mouseover', hideCursorBlock);
+    mainArea.addEventListener('touchstart', hideCursorBlock);
+
+    /* SCRIPT */
+    const sections = document.querySelectorAll('.section');
+    const screen1 = document.querySelector('.section.step1');
+    const scratchContainer = document.querySelector('#scratch-container');
+    const frontScratch = document.querySelector('.scratchFont').getAttribute('src');
+    const backScratch = document.querySelector('.scratchBack').getAttribute('src');
+    let activeSection;
+
+    const removeActive = function(e) {
+      activeSection = document.querySelector('.section.active');
+      activeSection.classList.remove('active');
+    }
+
+    const changeStep = function(e) {
+      document.querySelector('.rainblock1').classList.remove('ready');
+      document.querySelector('.rainblock1').classList.add('disabled');
+      document.querySelector('.active').classList.add('preview');
+      setTimeout(()=>{
+        document.querySelector('.preview').addEventListener('click', ctaFunction);
+      }, 3000);
+    }
+
+    /* SCRATCH */
+    window.addEventListener('load', function () {
+      var scContainer = document.getElementById('scratch-container');
+      var sc = new ScratchCard('#scratch-container', {
+        enabledPercentUpdate: true,
+        scratchType: SCRATCH_TYPE.SPRAY,
+        // brushSrc: './images/brush.png',
+        containerWidth: scContainer.offsetWidth,
+        containerHeight: 300,
+        imageForwardSrc: frontScratch,
+        imageBackgroundSrc: backScratch,
+        // htmlBackground: '<p class="test"><strong>Hello i am HTML content !</strong></p>',
+        clearZoneRadius: 30,
+        percentToFinish: 50, // When the percent exceeds 50 on touchend event the callback will be exec.
+        nPoints: 30,
+        pointSize: 30,
+        callback: function () {
+          changeStep();
+        }
+      })
+      sc.canvas.addEventListener('scratch.move', () => {
+        let percent = parseInt(sc.getPercent());
+        if (percent >= 60) {
+          dragft2();
+          changeStep();
+        }
+      });
+      sc.init().then(() => {
+        // setTimeout(()=>{
+          document.querySelector('.rainblock1').classList.add('ready');
+        // }, 500);
+      });
+    });
+
+    // document.addEventListener("DOMContentLoaded", ()=>{
+    //   document.querySelector('.rainblock1').classList.add('ready');
+    // });
+  </script>
+</body>
+</html>
